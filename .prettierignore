@@ -1,0 +1,5 @@
+Mục đích là Prettier bỏ qua các file không cần thiết
+
+
+node_modules/
+dist/
