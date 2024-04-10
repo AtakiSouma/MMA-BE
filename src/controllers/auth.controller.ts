@@ -30,6 +30,16 @@ const authController = {
       console.log(error)
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
     }
+  }),
+
+  loginWithGoogleMobile: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = await authServices.handleLoginWithGoogleWithMobile(req, next)
+      return sendSuccessResponse(res, HttpStatusCodes.OK, user)
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
   })
 }
 export default authController

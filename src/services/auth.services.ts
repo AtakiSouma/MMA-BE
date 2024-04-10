@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { NextFunction, Response, Request } from 'express'
 import HttpStatusCodes from '~/constants/HttpStatusCodes'
 import userModel from '~/models/users.model'
@@ -5,8 +6,22 @@ import { UserLoginParams, tokenGenerate } from '~/types/auth.types'
 import ErrorHandler from '~/utils/errorHandler'
 import jwtServices from './jwt.services'
 import bcryptModule from '~/utils/bcryptModule'
-
+import jwt from 'jsonwebtoken'
+import { sendSuccessResponse } from '~/constants/successResponse'
+import { access } from 'fs'
 class authServices {
+  private getJsonWebToken = async (email: string, id: string) => {
+    const payload = {
+      email,
+      id
+    }
+    const secret_key = process.env.SECRET_KEY || 'my_secret_key'
+    const token = jwt.sign(payload, secret_key, {
+      expiresIn: '7d'
+    })
+
+    return token
+  }
   private generateResponse(input: tokenGenerate, accessToken: string, link: string, next: NextFunction) {
     if (!input.id || !accessToken || !input.email) {
       return next(new ErrorHandler('Invalid data', HttpStatusCodes.CONFLICT))
@@ -116,6 +131,53 @@ class authServices {
       return 'Logged out successfully'
     } catch (error) {
       return next(new ErrorHandler('Can not logout', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }
+  public async handleLoginWithGoogleWithMobile(req: Request, next: NextFunction) {
+    const userInfo = req.body
+    let user: any
+    const existingUser = await userModel.findOne({ email: userInfo.email })
+    if (existingUser) {
+      await userModel.findByIdAndUpdate(existingUser.id, {
+        updateAtLogin: Date.now()
+      })
+      user = { ...existingUser }
+      user.accesstoken = await this.getJsonWebToken(userInfo.email, userInfo.id)
+      if (user) {
+        const data = {
+          accesstoken: user.accesstoken,
+          id: existingUser._id,
+          email: existingUser.email,
+          photo: existingUser.photoUrl,
+          name: existingUser.name
+        }
+        return data
+      } else {
+        return next(new ErrorHandler('Error login', HttpStatusCodes.NOT_FOUND))
+      }
+    } else {
+      const newUser = new userModel({
+        email: userInfo.email,
+        name: userInfo.name,
+        photoUrl: userInfo.photo,
+        role: '6615425973f8eddb58cfe6af',
+        ...userInfo
+      })
+      await newUser.save()
+      user = { ...newUser }
+      user.accesstoken = await this.getJsonWebToken(userInfo.email, newUser.id)
+      if (user) {
+        const data = {
+          accesstoken: user.accesstoken,
+          id: user._id,
+          email: user.email,
+          photo: user.photoUrl,
+          name: user.name
+        }
+        return data
+      } else {
+        return next(new ErrorHandler('Error login', HttpStatusCodes.NOT_FOUND))
+      }
     }
   }
 }
