@@ -40,6 +40,17 @@ const authController = {
       console.log(error)
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
     }
+  }),
+
+  loginWithGoogleWebDashboard: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { name, email, photo } = req.body
+      const user = await authServices.loginWithGoogle(email, name, photo, next, res)
+      return sendSuccessResponse(res, HttpStatusCodes.OK, user)
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
   })
 }
 export default authController

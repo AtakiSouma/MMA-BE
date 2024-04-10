@@ -10,6 +10,17 @@ import jwt from 'jsonwebtoken'
 import { sendSuccessResponse } from '~/constants/successResponse'
 import { access } from 'fs'
 class authServices {
+  // private async verifyGoogle(idToken: string) {
+  //   const decodedUser: UserRecord = await verifyToken(idToken)
+
+  //   const user = {
+  //     email: decodedUser.email,
+  //     name: decodedUser.displayName,
+  //     avatar: decodedUser.photoURL
+  //   }
+
+  //   return user
+  // }
   private getJsonWebToken = async (email: string, id: string) => {
     const payload = {
       email,
@@ -178,6 +189,76 @@ class authServices {
       } else {
         return next(new ErrorHandler('Error login', HttpStatusCodes.NOT_FOUND))
       }
+    }
+  }
+  public async loginWithGoogle(email: string, name: string, photo: string, next: NextFunction, res: Response) {
+    const user = await userModel.findOne({ email: email })
+    if (user) {
+      await userModel.updateOne(
+        {
+          updateAtLogin: Date.now()
+        },
+        { new: true }
+      )
+      const tokenGenerated: tokenGenerate = {
+        id: user.id,
+        role: user.role,
+        email: user.email,
+        name: user.name,
+        photoUrl: user.photoUrl || 'https://i.pinimg.com/originals/67/41/93/6741938a381b6ba51fd7d4ed10c1bbf1.jpg',
+        avatar:
+          user.avatar.url ||
+          'https://64.media.tumblr.com/c8c06b57c16fc199ce6c791621e1d43d/8369c5657db09dce-8c/s1280x1920/d3b0217fb96b061f652724267adb94c55f42a46a.png'
+      }
+      let link = ''
+      if (String(user.role) === '66153c6d09d7c5006797e0a3') {
+        link = '/dashboard'
+      }
+      // staff
+      if (String(user.role) === '6615426373f8eddb58cfe6b2') {
+        link = '/accounts'
+      }
+      // instructors
+      if (String(user.role) === '6615424b73f8eddb58cfe6ac') {
+        link = '/dashboard'
+      }
+      const { accessToken, refreshToken } = jwtServices.generatePairToken(tokenGenerated)
+      this.setRefreshToken(res, refreshToken, user._id)
+      return this.generateResponse(tokenGenerated, accessToken, link, next)
+    } else {
+      // create new user with this email
+      const newUser = new userModel({
+        name: name,
+        email: email,
+        photoUrl: photo,
+        role: '66153c6d09d7c5006797e0a3'
+      })
+      await newUser.save()
+      const tokenGenerated: tokenGenerate = {
+        id: newUser.id,
+        role: newUser.role,
+        email: newUser.email,
+        name: newUser.name,
+        photoUrl: newUser.photoUrl || 'https://i.pinimg.com/originals/67/41/93/6741938a381b6ba51fd7d4ed10c1bbf1.jpg',
+        avatar:
+          newUser.avatar.url ||
+          'https://64.media.tumblr.com/c8c06b57c16fc199ce6c791621e1d43d/8369c5657db09dce-8c/s1280x1920/d3b0217fb96b061f652724267adb94c55f42a46a.png'
+      }
+      let link = ''
+      if (String(newUser.role) === '66153c6d09d7c5006797e0a3') {
+        link = '/dashboard'
+      }
+      // staff
+      if (String(newUser.role) === '6615426373f8eddb58cfe6b2') {
+        link = '/accounts'
+      }
+      // instructors
+      if (String(newUser.role) === '6615424b73f8eddb58cfe6ac') {
+        link = '/dashboard'
+      }
+      const { accessToken, refreshToken } = jwtServices.generatePairToken(tokenGenerated)
+      this.setRefreshToken(res, refreshToken, newUser._id)
+      return this.generateResponse(tokenGenerated, accessToken, link, next)
     }
   }
 }
