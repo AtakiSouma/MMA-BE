@@ -25,15 +25,12 @@ class authServices {
   }
   public async checkRole(req: Request, next: NextFunction) {
     const id = jwtServices.getUidFromCookie(req, next)
-    const userWithRole = await userModel
-      .findOne({
-        _id: id
-      })
-      .populate('role')
+    const userWithRole = await userModel.findById(id).populate('role')
+    console.log(userWithRole)
     if (!userWithRole) {
       return next(new ErrorHandler('Role is not exist', HttpStatusCodes.UNAUTHORIZED))
     }
-    return userWithRole
+    return userWithRole.role._id
   }
 }
 
