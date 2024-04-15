@@ -21,6 +21,7 @@ export interface IUser extends Document {
   courses: Array<{ courseId: string }>
   isBlocked?: boolean
   status: boolean
+  updateAtLogin: Date
 }
 
 const usersSchema: Schema<IUser> = new mongoose.Schema(
@@ -71,6 +72,10 @@ const usersSchema: Schema<IUser> = new mongoose.Schema(
     isVerified: {
       type: Boolean,
       default: false
+    },
+    updateAtLogin: {
+      type: Date,
+      default: Date.now()
     }
   },
   { timestamps: true }

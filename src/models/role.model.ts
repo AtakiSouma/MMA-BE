@@ -25,5 +25,5 @@ const rolesSchema: Schema<IRole> = new mongoose.Schema(
   },
   { timestamps: true }
 )
-const roleModel: Model<IRole> = mongoose.model('Role', rolesSchema)
+const roleModel: Model<IRole> = mongoose.model('Roles', rolesSchema)
 export default roleModel

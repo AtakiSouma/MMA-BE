@@ -29,6 +29,15 @@ const roleController = {
     } catch (error) {
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
     }
+  }),
+  // function : check role
+  checkRoles: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const roles = await roleServices.checkRole(req, next)
+      return sendSuccessResponse(res, HttpStatusCodes.OK, roles)
+    } catch (error: any) {
+      return next(new ErrorHandler('Internal Server Error', error))
+    }
   })
 }
 export default roleController

@@ -25,6 +25,15 @@ const userController = {
     } catch (error) {
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
     }
+  }),
+  getAllUser: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { search, page, limit } = req.body
+      const user = await userServices.getAllUsers({ limit, search, page })
+      if (user) sendSuccessResponse(res, HttpStatusCodes.OK, user)
+    } catch (error) {
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
   })
 }
 export default userController
