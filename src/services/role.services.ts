@@ -32,6 +32,7 @@ class authServices {
     }
     return userWithRole.role._id
   }
+  public async changeRole() {}
 }
 
 export default new authServices()
