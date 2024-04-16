@@ -34,6 +34,24 @@ const userController = {
     } catch (error) {
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
     }
+  }),
+  updateUserInfo: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { avatar, name, school } = req.body
+      const user = await userServices.updateUserInfo({ avatar, name, school }, next, req)
+      if (user) sendSuccessResponse(res, HttpStatusCodes.OK, user)
+    } catch (error) {
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  updatePassword: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { newPassword, oldPassword, confirmPassword } = req.body
+      const user = await userServices.updatePassword({ confirmPassword, newPassword, oldPassword }, next, req)
+      if (user) sendSuccessResponse(res, HttpStatusCodes.OK, user)
+    } catch (error) {
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
   })
 }
 export default userController

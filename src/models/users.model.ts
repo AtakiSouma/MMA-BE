@@ -22,6 +22,7 @@ export interface IUser extends Document {
   isBlocked?: boolean
   status: boolean
   updateAtLogin: Date
+  school: string
 }
 
 const usersSchema: Schema<IUser> = new mongoose.Schema(
@@ -30,6 +31,9 @@ const usersSchema: Schema<IUser> = new mongoose.Schema(
       type: String
     },
     givenName: {
+      type: String
+    },
+    school: {
       type: String
     },
     familyName: {
