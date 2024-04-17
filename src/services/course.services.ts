@@ -3,7 +3,9 @@ import cloudinary from 'cloudinary'
 import CourseModel from '~/models/courses.model'
 import ErrorHandler from '~/utils/errorHandler'
 import HttpStatusCodes from '~/constants/HttpStatusCodes'
-
+import axios from 'axios'
+import { PaginationParams } from '~/types/type'
+import userModel from '~/models/users.model'
 class courseServices {
   public async createCourse(data: any) {
     const thumbnail = data.thumbnail
@@ -59,6 +61,52 @@ class courseServices {
       }
     )
     return courseUpdated
+  }
+  public async generateNewVideoUrl(videoId: any) {
+    const response = await axios.post(
+      `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
+      {
+        ttl: 300
+      },
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Apisecret kyfYnSxzFCBFj3sRfH5jYpiInCxm9ouOCaohh6zeJBxE6xSPbTfHrNLrfZo5r8r0`
+        }
+      }
+    )
+    return response.data
+  }
+  public async getAllCourse({ page, limit, search }: PaginationParams) {
+    const query = {
+      name: { $regex: new RegExp(search, 'i') }
+    }
+    const courseList = await CourseModel.find(query)
+      .populate({
+        path: 'categories',
+        select: '_id title'
+      })
+      .skip((page - 1) * limit)
+      .limit(limit)
+    const totalCount = await CourseModel.countDocuments(query)
+    const data = courseList.map((course) => ({
+      name: course.name,
+      thumbnail: course.thumbnail,
+      description: course.description,
+      price: course.price,
+      categories: course.categories,
+      level: course.level,
+      purchased: course.purchased,
+      status: course.status || 'Active',
+      createdAt: course.createdAt
+    }))
+    const response = {
+      data,
+      totalCount,
+      pageCount: Math.ceil(totalCount / limit)
+    }
+    return response
   }
 }
 export default new courseServices()
