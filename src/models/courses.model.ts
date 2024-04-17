@@ -1,5 +1,6 @@
 import mongoose, { Model, Schema, Document } from 'mongoose'
 import { IUser } from './users.model'
+import { ICategories } from './categories.model'
 export interface IComment extends Document {
   user: mongoose.Types.ObjectId | IUser
   question: string
@@ -23,6 +24,7 @@ export interface ICourseContentData extends Document {
   suggestion: string
   questions: IComment[]
   reviews: IReview[]
+  links: ILink[]
 }
 export interface ICourse extends Document {
   instructor: mongoose.Types.ObjectId
@@ -34,7 +36,7 @@ export interface ICourse extends Document {
     public_id: string
     url: string
   }
-  categories: string
+  categories: mongoose.Types.ObjectId | ICategories
   level: string
   purchased: number
   ratings: number
@@ -42,6 +44,11 @@ export interface ICourse extends Document {
   benefits?: { title: string }[]
   reviews?: IReview[]
   courseContentData: ICourseContentData[]
+  prerequisites?: { title: string }[]
+  totalVideos?: number
+  isBlocked?: boolean
+  status: string
+  createdAt: Date;
 }
 
 const reviewSchema = new Schema<IReview>({
@@ -58,7 +65,15 @@ const commentSchema = new Schema<IComment>({
   question: String,
   questionReplies: [Object]
 })
+export interface ILink extends Document {
+  title: string
+  url: string
+}
 
+const linkSchema = new Schema<ILink>({
+  title: String,
+  url: String
+})
 const courseDataSchema = new Schema<ICourseContentData>({
   videoUrl: String,
   //   videoThumbnail: Object,
@@ -68,7 +83,8 @@ const courseDataSchema = new Schema<ICourseContentData>({
   videoLength: Number,
   reviews: [reviewSchema],
   suggestion: String,
-  questions: [commentSchema]
+  questions: [commentSchema],
+  links: [linkSchema]
 })
 
 const courseSchema = new Schema<ICourse>(
@@ -91,7 +107,8 @@ const courseSchema = new Schema<ICourse>(
       url: { type: String }
     },
     categories: {
-      type: String
+      type: mongoose.Types.ObjectId,
+      ref: 'Categories'
     },
     level: {
       type: String
@@ -108,7 +125,11 @@ const courseSchema = new Schema<ICourse>(
       type: String
     },
     benefits: [{ title: String }],
-    courseContentData: [courseDataSchema]
+    courseContentData: [courseDataSchema],
+    prerequisites: [{ title: String }],
+    totalVideos: { type: Number, default: 0 },
+    isBlocked: { type: Boolean, default: false },
+    status: { type: String, enum: ['Active', 'Not Active'], default: 'Not Active' }
   },
   { timestamps: true }
 )

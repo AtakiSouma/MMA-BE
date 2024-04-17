@@ -27,6 +27,26 @@ const courseController = {
       console.log(error)
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
     }
+  }),
+  generateNewVideoUrl: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { videoId } = req.body
+      const newCourse = await courseServices.generateNewVideoUrl(videoId)
+      return sendSuccessResponse(res, HttpStatusCodes.CREATED, newCourse)
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  getAllCourse: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { search, page, limit } = req.body
+      const allCourse = await courseServices.getAllCourse({ page, limit, search })
+      return sendSuccessResponse(res, HttpStatusCodes.OK, allCourse)
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
   })
 }
 
