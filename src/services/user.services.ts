@@ -10,6 +10,7 @@ import bcryptModule from '../utils/bcryptModule'
 import { PaginationParams } from '~/types/type'
 import jwtServices from './jwt.services'
 import cloudinary from 'cloudinary'
+import { HttpStatusCode } from 'axios'
 
 class userServices {
   public async createNewUser({ confirmPassword, email, name, password }: UserParams, next: NextFunction) {
@@ -150,6 +151,13 @@ class userServices {
     user.password = pwd
     await user.save()
     return user
+  }
+  public async getInstructorInformationById(id: string, next: NextFunction) {
+    const instructor = await userModel.findById({ _id: id })
+    if (!instructor) {
+      return next(new ErrorHandler('Instructor not found', HttpStatusCodes.NOT_FOUND))
+    }
+    return instructor
   }
 }
 

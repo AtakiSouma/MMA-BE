@@ -52,6 +52,15 @@ const userController = {
     } catch (error) {
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
     }
+  }),
+  getInstructorInformationById: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params
+      const user = await userServices.getInstructorInformationById(id, next)
+      if (user) sendSuccessResponse(res, HttpStatusCodes.OK, user)
+    } catch (error) {
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
   })
 }
 export default userController

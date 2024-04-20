@@ -27,7 +27,7 @@ export interface ICourseContentData extends Document {
   links: ILink[]
 }
 export interface ICourse extends Document {
-  instructor: mongoose.Types.ObjectId
+  instructor: mongoose.Types.ObjectId | IUser
   name: string
   description: string
   price: number
@@ -48,7 +48,7 @@ export interface ICourse extends Document {
   totalVideos?: number
   isBlocked?: boolean
   status: string
-  createdAt: Date;
+  createdAt: Date
 }
 
 const reviewSchema = new Schema<IReview>({
@@ -123,6 +123,10 @@ const courseSchema = new Schema<ICourse>(
     },
     demoUrl: {
       type: String
+    },
+    instructor: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Users'
     },
     benefits: [{ title: String }],
     courseContentData: [courseDataSchema],

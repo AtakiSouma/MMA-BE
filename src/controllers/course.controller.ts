@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import HttpStatusCodes from '~/constants/HttpStatusCodes'
-import { sendSuccessResponse } from '~/constants/successResponse'
+import {
+  sendSuccessResponse,
+  sendSuccessResponseString,
+  sendSuccessResponseWithMessage
+} from '~/constants/successResponse'
 
 import { CatchAsyncError } from '~/middlewares/catchAsyncError.'
 import courseServices from '~/services/course.services'
@@ -43,6 +47,56 @@ const courseController = {
       const { search, page, limit } = req.body
       const allCourse = await courseServices.getAllCourse({ page, limit, search })
       return sendSuccessResponse(res, HttpStatusCodes.OK, allCourse)
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  getOneCourse: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { courseId } = req.params
+      const course = await courseServices.getOneCourse(courseId, next)
+      return sendSuccessResponse(res, HttpStatusCodes.OK, course)
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  getAllCourseByIntructors: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { instructorId } = req.params
+      const { search, page, limit } = req.body
+      const course = await courseServices.getAllCourseByIntructors(instructorId, { search, page, limit })
+      return sendSuccessResponse(res, HttpStatusCodes.OK, course)
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  ChangeStatusToActiveCourseByAdmin: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { courseId } = req.params
+      await courseServices.ChangeStatusToActiveCourseByAdmin(courseId, next)
+      return sendSuccessResponseWithMessage(res, HttpStatusCodes.OK, 'Change status to active successfully')
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  ToggleBlockCourse: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { courseId } = req.params
+      await courseServices.ToggleBlockCourse(courseId, next)
+      return sendSuccessResponseWithMessage(res, HttpStatusCodes.OK, 'Change status to active successfully')
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  getAllCourseInMobile: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const course = await courseServices.getAllCourseInMobile()
+      return sendSuccessResponse(res, HttpStatusCodes.OK, course)
     } catch (error) {
       console.log(error)
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))

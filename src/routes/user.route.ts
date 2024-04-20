@@ -6,5 +6,5 @@ router.post('/', userController.register)
 router.put('/user-info', MiddleWareController.isAuthenticated, userController.updateUserInfo)
 router.post('/get-all', MiddleWareController.isAuthenticated, userController.getAllUser)
 router.put('/password', MiddleWareController.isAuthenticated, userController.updatePassword)
-
+router.get('/instructor/:id', MiddleWareController.isAuthenticated, userController.getInstructorInformationById)
 export default router
