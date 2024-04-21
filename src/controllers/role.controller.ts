@@ -33,7 +33,8 @@ const roleController = {
   // function : check role
   checkRoles: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const roles = await roleServices.checkRole(req, next)
+      const { id } = req.params
+      const roles = await roleServices.checkRole(req, next, id)
       return sendSuccessResponse(res, HttpStatusCodes.OK, roles)
     } catch (error: any) {
       return next(new ErrorHandler('Internal Server Error', error))

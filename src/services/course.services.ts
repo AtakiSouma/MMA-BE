@@ -127,7 +127,7 @@ class courseServices {
   public async getAllCourseByIntructors(instructorId: string, { limit, page, search }: PaginationParams) {
     const query = {
       name: { $regex: new RegExp(search, 'i') },
-      instructor: instructorId 
+      instructor: instructorId
     }
     const courseList = await CourseModel.find(query)
       .populate({
@@ -200,5 +200,20 @@ class courseServices {
       )
     }
   }
+  public async getCourseAreStudyingByUser(userId: string, next: NextFunction) {
+    const user = await userModel.findById({ _id: userId })
+    if (!user) {
+      return next(new ErrorHandler('User not found', HttpStatusCodes.NOT_FOUND))
+    }
+    const courseIds = user.courses.map((course: any) => course._id)
+
+    const courses = await CourseModel.find({ _id: { $in: courseIds } }).populate({
+      path: 'categories',
+      select: '_id title'
+    })
+
+    return courses
+  }
+  
 }
 export default new courseServices()

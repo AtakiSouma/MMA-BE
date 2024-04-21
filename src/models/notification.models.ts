@@ -5,6 +5,8 @@ export interface INotification extends Document {
   message: string
   status: string
   userId: string
+  link: string
+  mobile_link: string
 }
 
 const categoriesSchema: Schema<INotification> = new mongoose.Schema(
@@ -20,6 +22,12 @@ const categoriesSchema: Schema<INotification> = new mongoose.Schema(
     status: {
       type: String,
       default: 'unread'
+    },
+    link: {
+      type: String
+    },
+    mobile_link: {
+      type: String
     }
   },
   { timestamps: true }

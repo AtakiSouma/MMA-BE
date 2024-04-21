@@ -53,9 +53,11 @@ const usersSchema: Schema<IUser> = new mongoose.Schema(
     interests: {
       type: [String]
     },
-    courses: {
-      type: [String]
-    },
+    courses: [
+      {
+        courseId: String
+      }
+    ],
     avatar: {
       public_id: String,
       url: String

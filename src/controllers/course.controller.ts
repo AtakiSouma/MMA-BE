@@ -100,6 +100,16 @@ const courseController = {
       console.log(error)
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
     }
+  }),
+  getAllCourseBoughtByUser: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    const { userId } = req.params
+    try {
+      const course = await courseServices.getCourseAreStudyingByUser(userId, next)
+      return sendSuccessResponse(res, HttpStatusCodes.OK, course)
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
   })
 }
 
