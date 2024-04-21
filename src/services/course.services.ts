@@ -91,6 +91,7 @@ class courseServices {
       .limit(limit)
     const totalCount = await CourseModel.countDocuments(query)
     const data = courseList.map((course) => ({
+      id: course.id,
       name: course.name,
       thumbnail: course.thumbnail,
       description: course.description,
@@ -125,11 +126,10 @@ class courseServices {
   }
   public async getAllCourseByIntructors(instructorId: string, { limit, page, search }: PaginationParams) {
     const query = {
-      name: { $regex: new RegExp(search, 'i') }
+      name: { $regex: new RegExp(search, 'i') },
+      instructor: instructorId 
     }
-    const courseList = await CourseModel.find(query, {
-      instructor: instructorId
-    })
+    const courseList = await CourseModel.find(query)
       .populate({
         path: 'categories',
         select: '_id title'
@@ -138,6 +138,7 @@ class courseServices {
       .limit(limit)
     const totalCount = await CourseModel.countDocuments(query)
     const data = courseList.map((course) => ({
+      id: course.id,
       name: course.name,
       thumbnail: course.thumbnail,
       description: course.description,
