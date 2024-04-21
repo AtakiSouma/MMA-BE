@@ -64,8 +64,7 @@ const courseController = {
   }),
   getAllCourseByIntructors: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { instructorId } = req.params
-      const { search, page, limit } = req.body
+      const { search, page, limit, instructorId } = req.body
       const course = await courseServices.getAllCourseByIntructors(instructorId, { search, page, limit })
       return sendSuccessResponse(res, HttpStatusCodes.OK, course)
     } catch (error) {
