@@ -14,7 +14,6 @@ const MiddleWareController = {
       }
       const accessToken = token.split(' ')[1]
       const payload = jwtServices.verifyToken(accessToken, next) as JwtPayload
-      console.log(payload)
       if (!payload) {
         return next(new ErrorHandler('You are not authenticated', HttpStatusCodes.UNAUTHORIZED))
       }

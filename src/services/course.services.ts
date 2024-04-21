@@ -110,10 +110,15 @@ class courseServices {
     return response
   }
   public async getAllCourseInMobile() {
-    const course = await CourseModel.find({}).populate({
-      path: 'categories',
-      select: '_id title'
-    })
+    const course = await CourseModel.find({})
+      .populate({
+        path: 'categories',
+        select: '_id title'
+      })
+      .populate({
+        path: 'instructor',
+        select: '_id name email photoUrl avatar role'
+      })
     return course
   }
 
@@ -214,6 +219,5 @@ class courseServices {
 
     return courses
   }
-  
 }
 export default new courseServices()
