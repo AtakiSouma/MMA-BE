@@ -1,4 +1,5 @@
 import mongoose, { Model, Schema, Document } from 'mongoose'
+import { IUser } from './users.model'
 
 export interface IOrder extends Document {
   courseId: mongoose.Types.ObjectId
@@ -8,17 +9,19 @@ export interface IOrder extends Document {
   isBan: boolean
   status: string
   finished_At: Date
+  createdAt: Date
+
 }
 const orderSchema = new Schema<IOrder>(
   {
     courseId: {
       type: Schema.Types.ObjectId,
-      ref: 'courses',
+      ref: 'Courses',
       require: true
     },
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'users',
+      ref: 'User',
       required: true
     },
     note: {

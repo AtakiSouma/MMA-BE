@@ -23,10 +23,9 @@ class authServices {
     const roles = await roleModel.find({}, { _id: 1, title: 1, slug: 1 })
     return roles
   }
-  public async checkRole(req: Request, next: NextFunction) {
-    const id = jwtServices.getUidFromCookie(req, next)
+  public async checkRole(req: Request, next: NextFunction, id: string) {
+    // const id = jwtServices.getUidFromCookie(req, next)
     const userWithRole = await userModel.findById(id).populate('role')
-    console.log(userWithRole)
     if (!userWithRole) {
       return next(new ErrorHandler('Role is not exist', HttpStatusCodes.UNAUTHORIZED))
     }
