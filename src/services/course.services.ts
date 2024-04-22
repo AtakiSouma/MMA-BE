@@ -12,6 +12,7 @@ import { CatchAsyncError } from '~/middlewares/catchAsyncError.'
 import ejs from 'ejs'
 import path from 'path'
 import { sendEmail } from '~/utils/sendMail'
+import OrderModel from '~/models/order.model'
 class courseServices {
   public async createCourse(data: any) {
     const thumbnail = data.thumbnail
@@ -130,10 +131,19 @@ class courseServices {
 
   public async getOneCourse(courseId: string, next: NextFunction) {
     const course = await CourseModel.findById({ _id: courseId })
+      .populate({
+        path: 'categories',
+        select: '_id title'
+      })
+      .populate({
+        path: 'instructor',
+        select: '_id name email photoUrl avatar role'
+      })
     if (!course) {
       return next(new ErrorHandler(`Course not found`, HttpStatusCodes.NOT_FOUND))
     }
-    return course
+    const order = await OrderModel.find({ courseId: courseId })
+    return    course
   }
   public async getAllCourseByIntructors(instructorId: string, { limit, page, search }: PaginationParams) {
     const query = {
