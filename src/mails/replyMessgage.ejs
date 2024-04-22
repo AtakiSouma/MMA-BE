@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reply</title>
+    <style>
+      .hello {
+        font-size: 30px;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        border-width: 1px;
+        border-radius: 10px;
+        width: 500px;
+        height: 300px;
+      }
+      .container > div {
+        margin-bottom: 10px;
+      }
+      .container img {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hello">Hello <%= childrenName %></div>
+    <div class="container">
+      <div>Your image</div>
+      <div><img src="<%= image %>" alt="Image" /></div>
+      <div>__________________________________</div>
+      <div>Question : <%= question %></div>
+      <div>__________________________________</div>
+      <div>Reply: <%= replyMessage %></div>
+    </div>
+    <div>From support instructor : <%= email %></div>
+  </body>
+</html>
