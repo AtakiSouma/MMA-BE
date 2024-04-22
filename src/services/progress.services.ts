@@ -17,10 +17,6 @@ class progressServices {
       return next(new ErrorHandler('User not found', HttpStatusCodes.NOT_FOUND))
     }
     const courseContent = course.courseContentData.find((content) => content._id.toString() === courseContentId)
-    // console.log(courseContent)
-    // console.log('give id', courseContentId)
-    // console.log('course', course._id)
-    // console.log('user', user._id)
     if (!courseContent || courseContent === undefined) {
       return next(new ErrorHandler('Course Content not found', HttpStatusCodes.NOT_FOUND))
     }
@@ -42,6 +38,22 @@ class progressServices {
   }
 
   public async getCourseContentProgress({ courseId, userId }: progressListParams, next: NextFunction) {
+    const course = await CourseModel.findById({ _id: courseId })
+    if (!course) {
+      return next(new ErrorHandler('Course not found', HttpStatusCodes.NOT_FOUND))
+    }
+    const user = await userModel.findById({ _id: userId })
+    if (!user) {
+      return next(new ErrorHandler('User not found', HttpStatusCodes.NOT_FOUND))
+    }
+    const progressList = await progressModel.find({
+      courseId: courseId,
+      userId: userId
+    })
+    return progressList
+  }
+  
+  public async getCourseContentProgressDetail({ courseId, userId }: progressListParams, next: NextFunction) {
     const course = await CourseModel.findById({ _id: courseId })
     if (!course) {
       return next(new ErrorHandler('Course not found', HttpStatusCodes.NOT_FOUND))
