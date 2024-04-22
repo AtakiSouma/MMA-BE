@@ -7,6 +7,7 @@ import courseRouter from './course.route'
 import paymentRouter from './payment.route'
 import orderRouter from './order.route'
 import progressRouter from './progress.route'
+import resultRouter from './result.route'
 export function route(app: express.Express) {
   app.use('/api/v1/role', roleRouter)
   app.use('/api/v1/user', userRouter)
@@ -16,4 +17,5 @@ export function route(app: express.Express) {
   app.use('/api/v1/payment', paymentRouter)
   app.use('/api/v1/order', orderRouter)
   app.use('/api/v1/progress', progressRouter)
+  app.use('/api/v1/result', resultRouter)
 }
