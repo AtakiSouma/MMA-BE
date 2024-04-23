@@ -70,6 +70,53 @@ const userController = {
     } catch (error) {
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
     }
+  }),
+  getInstructorsCount: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const instructorsCount = await userServices.getUsersCount('Instructor', next)
+      if (instructorsCount) sendSuccessResponse(res, HttpStatusCodes.OK, instructorsCount)
+    } catch (error) {
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  getCustomersCount: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const customersCount = await userServices.getUsersCount('Customer', next)
+      if (customersCount) sendSuccessResponse(res, HttpStatusCodes.OK, customersCount)
+    } catch (error) {
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  postInstructorCerts: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { listCerts } = req.body
+      const { id } = req.params
+      if (!listCerts || !id) {
+        return next(new ErrorHandler('Invalid Input', HttpStatusCodes.NOT_FOUND))
+      }
+      const updatedUser = await userServices.postInstructorCerts(id, listCerts, next)
+      return sendSuccessResponse(res, HttpStatusCodes.CREATED, updatedUser)
+    } catch (error) {
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  acceptInstructor: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params
+      const updatedUser = await userServices.acceptInstructor(id, next)
+      return sendSuccessResponse(res, HttpStatusCodes.CREATED, updatedUser)
+    } catch (error) {
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  rejectInstructor: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params
+      const updatedUser = await userServices.rejectInstructor(id, next)
+      return sendSuccessResponse(res, HttpStatusCodes.CREATED, updatedUser)
+    } catch (error) {
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
   })
 }
 export default userController

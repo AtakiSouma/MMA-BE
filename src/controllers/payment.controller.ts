@@ -3,7 +3,12 @@ import { CatchAsyncError } from '~/middlewares/catchAsyncError.'
 import ErrorHandler from '~/utils/errorHandler'
 import { NextFunction, Request, Response } from 'express'
 import Stripe from 'stripe'
-import { sendSuccessResponse, sendSuccessResponseString } from '~/constants/successResponse'
+import {
+  sendSuccessResponse,
+  sendSuccessResponseString,
+  sendSuccessResponseWithMessage
+} from '~/constants/successResponse'
+import paymentServices from '~/services/payment.services'
 const paymentController = {
   IntentOrder: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     const { amount } = req.body /*  */
@@ -36,6 +41,29 @@ const paymentController = {
       )
     } catch (error) {
       console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  createCoursePaymentUrl: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const vnpUrl = await paymentServices.createCoursePaymentUrl(req, res, next)
+      if (vnpUrl) {
+        return sendSuccessResponse(res, HttpStatusCodes.OK, vnpUrl)
+      }
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  getReturnPaymentUrl: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const updatedUser = await paymentServices.getReturnPaymentUrl(req, res, next)
+      if (updatedUser) {
+        return sendSuccessResponseWithMessage(res, HttpStatusCodes.OK, 'Save successfully')
+      } else {
+        return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+      }
+    } catch (error) {
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
     }
   })

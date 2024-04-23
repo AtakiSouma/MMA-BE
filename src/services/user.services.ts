@@ -3,7 +3,7 @@ import HttpStatusCodes from '~/constants/HttpStatusCodes'
 import roleModel from '~/models/role.model'
 import userModel from '~/models/users.model'
 import { RoleParams } from '~/types/roles.types'
-import { UserParams, UserUpdateParams, UserUpdatePassword } from '~/types/user.types'
+import { Certificate, UserParams, UserUpdateParams, UserUpdatePassword } from '~/types/user.types'
 import GenerateSlug from '~/utils/GenerateSlug'
 import ErrorHandler from '~/utils/errorHandler'
 import bcryptModule from '../utils/bcryptModule'
@@ -11,6 +11,7 @@ import { PaginationParams } from '~/types/type'
 import jwtServices from './jwt.services'
 import cloudinary from 'cloudinary'
 import { HttpStatusCode } from 'axios'
+import { title } from 'process'
 
 class userServices {
   public async createNewUser({ confirmPassword, email, name, password }: UserParams, next: NextFunction) {
@@ -158,6 +159,99 @@ class userServices {
       return next(new ErrorHandler('Instructor not found', HttpStatusCodes.NOT_FOUND))
     }
     return instructor
+  }
+
+  public async getUsersCount(role: string, next: NextFunction) {
+    const userList = await userModel
+      .find()
+      .populate({
+        path: 'role',
+        select: 'title',
+        match: { title: role }
+      })
+      .exec()
+    const usersWithRole = userList.filter((user) => user.role !== null)
+
+    return usersWithRole.length
+  }
+  public async postInstructorCerts(id: string, listCerts: Certificate[], next: NextFunction) {
+    const user = await userModel.findById(id)
+    listCerts.map(async (cert) => {
+      try {
+        if (cert) {
+          const myCloud = await cloudinary.v2.uploader.upload(
+            cert.url,
+            {
+              folder: 'certificates'
+            },
+            (error) => console.log(error)
+          )
+          cert = {
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url
+          }
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    })
+    if (!user) {
+      return next(new ErrorHandler('Instructor not found', HttpStatusCodes.NOT_FOUND))
+    }
+    const updatedUser = await userModel.findByIdAndUpdate(
+      id,
+      {
+        isCertified: 'Proccessing',
+        certificates: listCerts
+      },
+      {
+        new: true
+      }
+    )
+    return updatedUser
+  }
+  public async acceptInstructor(id: string, next: NextFunction) {
+    const user = await userModel.findById(id)
+    if (!user) {
+      return next(new ErrorHandler('Instructor not found', HttpStatusCodes.NOT_FOUND))
+    }
+    const updatedUser = await userModel.findByIdAndUpdate(
+      id,
+      {
+        isCertified: 'Yes',
+        isVerified: true
+      },
+      {
+        new: true
+      }
+    )
+    return updatedUser
+  }
+  public async rejectInstructor(id: string, next: NextFunction) {
+    const user = await userModel.findById(id)
+    if (!user) {
+      return next(new ErrorHandler('Instructor not found', HttpStatusCodes.NOT_FOUND))
+    }
+    user.certificates.map(async (cert) => {
+      try {
+        if (cert) {
+          await cloudinary.v2.uploader.destroy(cert.public_id)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    })
+    const updatedUser = await userModel.findByIdAndUpdate(
+      id,
+      {
+        isCertified: 'Not Yet',
+        certificates: []
+      },
+      {
+        new: true
+      }
+    )
+    return updatedUser
   }
 }
 

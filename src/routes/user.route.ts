@@ -8,5 +8,9 @@ router.post('/get-all', MiddleWareController.isAuthenticated, userController.get
 router.put('/password', MiddleWareController.isAuthenticated, userController.updatePassword)
 router.get('/instructor/:id', MiddleWareController.isAuthenticated, userController.getInstructorInformationById)
 router.get('/:id', MiddleWareController.isAuthenticated, userController.getOneUser)
-
+router.get('/dashboard/instructorsCount', MiddleWareController.isAuthenticated, userController.getInstructorsCount)
+router.get('/dashboard/customersCount', MiddleWareController.isAuthenticated, userController.getCustomersCount)
+router.put('/instructor/postCerts/:id', MiddleWareController.isAuthenticated, userController.postInstructorCerts)
+router.put('/instructor/accept/:id', MiddleWareController.isAuthenticated, userController.acceptInstructor)
+router.put('/instructor/reject/:id', MiddleWareController.isAuthenticated, userController.rejectInstructor)
 export default router
