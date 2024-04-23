@@ -75,8 +75,7 @@ class authServices {
       photoUrl: user.photoUrl,
       isVerified: user.isVerified,
       isCertified: user.isCertified,
-      hasPaid: user.hasPaid,
-      
+      hasPaid: user.hasPaid
     }
     let link = ''
     const { accessToken, refreshToken } = jwtServices.generatePairToken(tokenGenerated)
@@ -125,8 +124,7 @@ class authServices {
       isCertified: user.isCertified,
       avatar:
         user.avatar.url ||
-        'https://64.media.tumblr.com/c8c06b57c16fc199ce6c791621e1d43d/8369c5657db09dce-8c/s1280x1920/d3b0217fb96b061f652724267adb94c55f42a46a.png',
-      
+        'https://64.media.tumblr.com/c8c06b57c16fc199ce6c791621e1d43d/8369c5657db09dce-8c/s1280x1920/d3b0217fb96b061f652724267adb94c55f42a46a.png'
     }
     const { accessToken, refreshToken } = jwtServices.generatePairToken(tokenGenerated)
     let link = ''
@@ -219,8 +217,7 @@ class authServices {
         isCertified: user.isCertified,
         avatar:
           user.avatar.url ||
-          'https://64.media.tumblr.com/c8c06b57c16fc199ce6c791621e1d43d/8369c5657db09dce-8c/s1280x1920/d3b0217fb96b061f652724267adb94c55f42a46a.png',
-        
+          'https://64.media.tumblr.com/c8c06b57c16fc199ce6c791621e1d43d/8369c5657db09dce-8c/s1280x1920/d3b0217fb96b061f652724267adb94c55f42a46a.png'
       }
       // console.log("token:", tokenGenerated)
       // console.log("user:", user)
@@ -245,7 +242,7 @@ class authServices {
         name: name,
         email: email,
         photoUrl: photo,
-        role: '66153c6d09d7c5006797e0a3'
+        role: '6615424b73f8eddb58cfe6ac'
       })
       await newUser.save()
       const tokenGenerated: tokenGenerate = {
@@ -259,7 +256,7 @@ class authServices {
         isCertified: newUser.isCertified,
         avatar:
           newUser.avatar.url ||
-          'https://64.media.tumblr.com/c8c06b57c16fc199ce6c791621e1d43d/8369c5657db09dce-8c/s1280x1920/d3b0217fb96b061f652724267adb94c55f42a46a.png',
+          'https://64.media.tumblr.com/c8c06b57c16fc199ce6c791621e1d43d/8369c5657db09dce-8c/s1280x1920/d3b0217fb96b061f652724267adb94c55f42a46a.png'
       }
       let link = ''
       if (String(newUser.role) === '66153c6d09d7c5006797e0a3') {
