@@ -12,6 +12,9 @@ import jwtServices from './jwt.services'
 import cloudinary from 'cloudinary'
 import { HttpStatusCode } from 'axios'
 import { title } from 'process'
+import path from 'path'
+import ejs from 'ejs'
+import { sendEmail } from '~/utils/sendMail'
 
 class userServices {
   public async createNewUser({ confirmPassword, email, name, password }: UserParams, next: NextFunction) {
@@ -225,9 +228,29 @@ class userServices {
         new: true
       }
     )
+    const mailData = {
+      user: {
+        instructorName: user.name,
+        email: user.email
+      }
+    }
+    const html = await ejs.renderFile(path.join(__dirname, '../mails/accept-verfication.ejs'), { user: mailData })
+    try {
+      if (user) {
+        await sendEmail({
+          email: user.email,
+          subject: 'Acceptance Verification',
+          data: mailData,
+          template: 'accept-verfication.ejs'
+        })
+      }
+    } catch (error: any) {
+      console.log('send Mail', error)
+      throw next(new ErrorHandler(error.message, HttpStatusCodes.BAD_REQUEST))
+    }
     return updatedUser
   }
-  public async rejectInstructor(id: string, next: NextFunction) {
+  public async rejectInstructor(id: string, reasons: string, next: NextFunction) {
     const user = await userModel.findById(id)
     if (!user) {
       return next(new ErrorHandler('Instructor not found', HttpStatusCodes.NOT_FOUND))
@@ -251,6 +274,28 @@ class userServices {
         new: true
       }
     )
+    const mailData = {
+      user: {
+        instructorName: user.name,
+        email: user.email,
+        reasons: reasons
+      }
+    }
+    const html = await ejs.renderFile(path.join(__dirname, '../mails/accept-verfication.ejs'), { user: mailData })
+    try {
+      if (user) {
+        await sendEmail({
+          email: user.email,
+          subject: 'Acceptance Verification',
+          data: mailData,
+          template: 'accept-verfication.ejs'
+        })
+      }
+    } catch (error: any) {
+      console.log('send Mail', error)
+      throw next(new ErrorHandler(error.message, HttpStatusCodes.BAD_REQUEST))
+    }
+
     return updatedUser
   }
   public async getAllTeacher({ limit, page, search }: PaginationParams) {
