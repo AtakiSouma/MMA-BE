@@ -244,7 +244,7 @@ class authServices {
         name: name,
         email: email,
         photoUrl: photo,
-        role: '66153c6d09d7c5006797e0a3'
+        role: '6615424b73f8eddb58cfe6ac'
       })
       await newUser.save()
       const tokenGenerated: tokenGenerate = {
@@ -270,7 +270,7 @@ class authServices {
       }
       // instructors
       if (String(newUser.role) === '6615424b73f8eddb58cfe6ac') {
-        link = '/dashboard'
+        link = '/instructor/start'
       }
       const { accessToken, refreshToken } = jwtServices.generatePairToken(tokenGenerated)
       this.setRefreshToken(res, refreshToken, newUser._id)
