@@ -221,6 +221,11 @@ class courseServices {
       )
     }
   }
+  public async getCoursesCount() {
+    const count = await CourseModel.countDocuments()
+
+    return count
+  }
   public async getCourseAreStudyingByUser(userId: string, next: NextFunction) {
     const user = await userModel.findById({ _id: userId })
     if (!user) {

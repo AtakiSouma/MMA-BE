@@ -46,6 +46,7 @@ const authController = {
     try {
       const { name, email, photo } = req.body
       const user = await authServices.loginWithGoogle(email, name, photo, next, res)
+      console.log(user)
       return sendSuccessResponse(res, HttpStatusCodes.OK, user)
     } catch (error) {
       console.log(error)

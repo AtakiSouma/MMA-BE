@@ -13,6 +13,7 @@ router.post('/get-all/instructor', MiddleWareController.isAuthenticated, courseC
 router.put('/update-statuss', MiddleWareController.isAuthenticated, courseController.ChangeStatusToActiveCourseByAdmin)
 router.put('/toggle-block', MiddleWareController.isAuthenticated, courseController.ToggleBlockCourse)
 router.get('/get-all-courses', MiddleWareController.isAuthenticated, courseController.getAllCourseInMobile)
+router.get('/getCoursesCount', MiddleWareController.isAuthenticated, courseController.getCoursesCount)
 router.get('/get-all/bought/:userId', MiddleWareController.isAuthenticated, courseController.getAllCourseBoughtByUser)
 router.post('/add-question', MiddleWareController.isAuthenticated, courseController.AddANewQuestion)
 router.post("/add-answer" , MiddleWareController.isAuthenticated , courseController.NewAnswer)
