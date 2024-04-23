@@ -33,6 +33,7 @@ export interface IUser extends Document {
   status: boolean
   updateAtLogin: Date
   school: string
+  createdAt: Date
 }
 
 const certificateSchema: Schema<ICertifficate> = new mongoose.Schema({

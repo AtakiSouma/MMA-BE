@@ -68,6 +68,7 @@ class resultServices {
         path: 'courseId',
         select: '_id name'
       })
+      .sort({ createdAt: -1 })
       .populate({
         path: 'userId',
         select: '_id name'

@@ -55,12 +55,14 @@ const authController = {
   }),
   logout: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.clearCookie('token'); 
-      return sendSuccessResponse(res, HttpStatusCodes.OK, { message: 'Logged out successfully' });
+      const { name, email, photo } = req.body
+      const user = await authServices.loginWithGoogle(email, name, photo, next, res)
+      console.log(user)
+      return sendSuccessResponse(res, HttpStatusCodes.OK, user)
     } catch (error) {
-      console.log(error);
-      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR));
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
     }
-  }),
+  })
 }
 export default authController

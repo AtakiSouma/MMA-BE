@@ -298,6 +298,43 @@ class userServices {
 
     return updatedUser
   }
+  public async getAllTeacher({ limit, page, search }: PaginationParams) {
+    const query = {
+      role: '6615424b73f8eddb58cfe6ac',
+      name: { $regex: new RegExp(search, 'i') }
+    }
+    const userList = await userModel
+      .find(query)
+      .populate({
+        path: 'role',
+        select: '_id slug'
+      })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+
+    const totalCount = await userModel.countDocuments(query)
+
+    const data = userList.map((user) => ({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      avatar: user.avatar,
+      photoUrl: user.photoUrl,
+      status: user.status,
+      isCertified: user.isCertified,
+      hasPaid: user.hasPaid,
+      certificates: user.certificates,
+      createdAt: user.createdAt
+    }))
+    const response = {
+      data,
+      totalCount,
+      pageCount: Math.ceil(totalCount / limit)
+    }
+    return response
+  }
 }
 
 export default new userServices()

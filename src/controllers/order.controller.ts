@@ -25,6 +25,16 @@ const orderController = {
       console.log(error)
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
     }
+  }),
+  getAllOrderByUser: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { userId } = req.params
+      const orderList = await orderServices.getAllOrderByUserKid(userId, next)
+      return sendSuccessResponse(res, HttpStatusCodes.OK, orderList)
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
   })
 }
 export default orderController

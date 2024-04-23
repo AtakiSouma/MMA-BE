@@ -119,5 +119,19 @@ class orderServices {
     }
     return response
   }
+  public async getAllOrderByUserKid(userId: string, next: NextFunction) {
+    const user = await userModel.findById({ _id: userId })
+    if (!user) {
+      return next(new ErrorHandler('User not found', HttpStatusCodes.UNAUTHORIZED))
+    }
+    const order = await OrderModel.find({ userId: userId }).populate({
+      path: 'courseId',
+      select: '_id thumbnail price name'
+    })
+    if (!order) {
+      return next(new ErrorHandler(' not found', HttpStatusCodes.UNAUTHORIZED))
+    }
+    return order
+  }
 }
 export default new orderServices()

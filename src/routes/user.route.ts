@@ -13,4 +13,5 @@ router.get('/dashboard/customersCount', MiddleWareController.isAuthenticated, us
 router.put('/instructor/postCerts/:id', MiddleWareController.isAuthenticated, userController.postInstructorCerts)
 router.put('/instructor/accept/:id', MiddleWareController.isAuthenticated, userController.acceptInstructor)
 router.put('/instructor/reject/:id', MiddleWareController.isAuthenticated, userController.rejectInstructor)
+router.post('/instructors/get-all', MiddleWareController.isAuthenticated, userController.getAllTeacher)
 export default router

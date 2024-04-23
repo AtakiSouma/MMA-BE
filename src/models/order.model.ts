@@ -1,26 +1,26 @@
 import mongoose, { Model, Schema, Document } from 'mongoose'
 import { IUser } from './users.model'
+import { ICourse } from './courses.model'
 
 export interface IOrder extends Document {
-  courseId: mongoose.Types.ObjectId
-  userId: mongoose.Types.ObjectId
+  courseId: mongoose.Types.ObjectId | ICourse
+  userId: mongoose.Types.ObjectId | IUser
   payment_info: object
   note: string
   isBan: boolean
   status: string
   finished_At: Date
   createdAt: Date
-
 }
 const orderSchema = new Schema<IOrder>(
   {
     courseId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: 'Courses',
       require: true
     },
     userId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: 'User',
       required: true
     },
