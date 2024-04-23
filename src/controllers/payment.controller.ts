@@ -32,6 +32,18 @@ const paymentController = {
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
     }
   }),
+  SendPublicKey: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      return sendSuccessResponseString(
+        res,
+        HttpStatusCodes.CREATED,
+        'pk_test_51P7cvEFCzIlVME0TNnsPXwmr2bqsPeeVLEGHaYbLOD8eNOpHQrZQBbjzjh5v4smwpceeceZtoWUJkDtS5tbPej4K000oJm7MxD'
+      )
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
   createCoursePaymentUrl: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const vnpUrl = await paymentServices.createCoursePaymentUrl(req, res, next)

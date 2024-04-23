@@ -7,4 +7,5 @@ router.post('/intents', MiddleWareController.isAuthenticated, paymentController.
 router.get('/getPaymentUrl', MiddleWareController.isAuthenticated, paymentController.createCoursePaymentUrl)
 router.post('/returnUrl/:id', MiddleWareController.isAuthenticated, paymentController.getReturnPaymentUrl)
 
+router.get('/publish_key', MiddleWareController.isAuthenticated, paymentController.SendPublicKey)
 export default router

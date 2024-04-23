@@ -126,7 +126,7 @@ const courseSchema = new Schema<ICourse>(
     },
     instructor: {
       type: mongoose.Types.ObjectId,
-      ref: 'Users'
+      ref: 'User'
     },
     benefits: [{ title: String }],
     courseContentData: [courseDataSchema],

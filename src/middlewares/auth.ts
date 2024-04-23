@@ -13,7 +13,7 @@ const MiddleWareController = {
         return next(new ErrorHandler('Please login to access this resources', HttpStatusCodes.UNAUTHORIZED))
       }
       const accessToken = token.split(' ')[1]
-      const payload = jwtServices.verifyToken(accessToken, next) as JwtPayload      
+      const payload = jwtServices.verifyToken(accessToken, next) as JwtPayload
       console.log(payload)
       if (!payload) {
         return next(new ErrorHandler('You are not authenticated', HttpStatusCodes.UNAUTHORIZED))

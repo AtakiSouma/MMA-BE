@@ -9,6 +9,7 @@ import {
 import { CatchAsyncError } from '~/middlewares/catchAsyncError.'
 import courseServices from '~/services/course.services'
 import ErrorHandler from '~/utils/errorHandler'
+import validateMongoDBId from '~/utils/validateMongoDbID'
 
 const courseController = {
   createCourse: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
@@ -64,8 +65,7 @@ const courseController = {
   }),
   getAllCourseByIntructors: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { instructorId } = req.params
-      const { search, page, limit } = req.body
+      const { search, page, limit, instructorId } = req.body
       const course = await courseServices.getAllCourseByIntructors(instructorId, { search, page, limit })
       return sendSuccessResponse(res, HttpStatusCodes.OK, course)
     } catch (error) {
@@ -106,6 +106,43 @@ const courseController = {
     try {
       const coursesCount = await courseServices.getCoursesCount()
       return sendSuccessResponse(res, HttpStatusCodes.OK, coursesCount)
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  getAllCourseBoughtByUser: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    const { userId } = req.params
+    try {
+      const course = await courseServices.getCourseAreStudyingByUser(userId, next)
+      return sendSuccessResponse(res, HttpStatusCodes.OK, course)
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  AddANewQuestion: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    const { contentId, courseId, question, userId } = req.body
+    validateMongoDBId(contentId, next)
+    validateMongoDBId(contentId, next)
+    validateMongoDBId(userId, next)
+    try {
+      const course = await courseServices.addQuestion({ contentId, courseId, question, userId }, next)
+      return sendSuccessResponse(res, HttpStatusCodes.OK, course)
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
+  NewAnswer: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    const { answer, contentId, courseId, questionId, userId } = req.body
+    validateMongoDBId(contentId, next)
+    validateMongoDBId(contentId, next)
+    validateMongoDBId(userId, next)
+    validateMongoDBId(questionId, next)
+    try {
+      const course = await courseServices.addAnswer({ contentId, courseId, questionId, answer, userId }, next)
+      return sendSuccessResponse(res, HttpStatusCodes.OK, course)
     } catch (error) {
       console.log(error)
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))

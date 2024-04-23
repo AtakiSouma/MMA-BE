@@ -62,6 +62,15 @@ const userController = {
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
     }
   }),
+  getOneUser: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params
+      const user = await userServices.getOneUser(id, next)
+      if (user) sendSuccessResponse(res, HttpStatusCodes.OK, user)
+    } catch (error) {
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }),
   getInstructorsCount: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const instructorsCount = await userServices.getUsersCount('Instructor', next)
