@@ -101,6 +101,15 @@ const courseController = {
       console.log(error)
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
     }
+  }),
+  getCoursesCount: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const coursesCount = await courseServices.getCoursesCount()
+      return sendSuccessResponse(res, HttpStatusCodes.OK, coursesCount)
+    } catch (error) {
+      console.log(error)
+      return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))
+    }
   })
 }
 

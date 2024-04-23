@@ -4,5 +4,7 @@ import roleController from '~/controllers/role.controller'
 import MiddleWareController from '~/middlewares/auth'
 const router = express.Router()
 router.post('/intents', MiddleWareController.isAuthenticated, paymentController.IntentOrder)
+router.get('/getPaymentUrl', MiddleWareController.isAuthenticated, paymentController.createCoursePaymentUrl)
+router.post('/returnUrl/:id', MiddleWareController.isAuthenticated, paymentController.getReturnPaymentUrl)
 
 export default router

@@ -12,4 +12,5 @@ router.post('/get-all/instructor/:id', MiddleWareController.isAuthenticated, cou
 router.put('/update-statuss', MiddleWareController.isAuthenticated, courseController.ChangeStatusToActiveCourseByAdmin)
 router.put('/toggle-block', MiddleWareController.isAuthenticated, courseController.ToggleBlockCourse)
 router.get('/get-all-courses', MiddleWareController.isAuthenticated, courseController.getAllCourseInMobile)
+router.get('/getCoursesCount', MiddleWareController.isAuthenticated, courseController.getCoursesCount)
 export default router

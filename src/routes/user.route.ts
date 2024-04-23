@@ -7,4 +7,9 @@ router.put('/user-info', MiddleWareController.isAuthenticated, userController.up
 router.post('/get-all', MiddleWareController.isAuthenticated, userController.getAllUser)
 router.put('/password', MiddleWareController.isAuthenticated, userController.updatePassword)
 router.get('/instructor/:id', MiddleWareController.isAuthenticated, userController.getInstructorInformationById)
+router.get('/dashboard/instructorsCount', MiddleWareController.isAuthenticated, userController.getInstructorsCount)
+router.get('/dashboard/customersCount', MiddleWareController.isAuthenticated, userController.getCustomersCount)
+router.put('/instructor/postCerts/:id', MiddleWareController.isAuthenticated, userController.postInstructorCerts)
+router.put('/instructor/accept/:id', MiddleWareController.isAuthenticated, userController.acceptInstructor)
+router.put('/instructor/reject/:id', MiddleWareController.isAuthenticated, userController.rejectInstructor)
 export default router

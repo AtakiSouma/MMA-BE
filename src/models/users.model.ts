@@ -4,6 +4,13 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { IRole } from './role.model'
 const emailRegexPattern: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+export interface ICertifficate extends Document {
+  public_id: string
+  type: string
+  url: string
+}
+
 export interface IUser extends Document {
   name: string
   givenName: string
@@ -17,13 +24,31 @@ export interface IUser extends Document {
   photoUrl: string
   role: mongoose.Types.ObjectId
   isVerified: boolean
+  isCertified: string
+  hasPaid: boolean
   interests: Array<{ courseId: string }>
   courses: Array<{ courseId: string }>
+  certificates: ICertifficate[]
   isBlocked?: boolean
   status: boolean
   updateAtLogin: Date
   school: string
 }
+
+const certificateSchema: Schema<ICertifficate> = new mongoose.Schema({
+  public_id: {
+    type: String
+  },
+  type: {
+    type: String,
+    enum: ['High School Diploma', "Bachelor's degree", 'English Certification'],
+    required: true
+  },
+  url: {
+    type: String,
+    required: true
+  }
+})
 
 const usersSchema: Schema<IUser> = new mongoose.Schema(
   {
@@ -77,6 +102,16 @@ const usersSchema: Schema<IUser> = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    isCertified: {
+      type: String,
+      enum: ['Not yet', 'Proccessing', 'Yes'],
+      default: 'Not yet'
+    },
+    hasPaid: {
+      type: Boolean,
+      default: false
+    },
+    certificates: [certificateSchema],
     updateAtLogin: {
       type: Date,
       default: Date.now()

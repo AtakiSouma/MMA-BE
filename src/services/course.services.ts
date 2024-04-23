@@ -199,5 +199,10 @@ class courseServices {
       )
     }
   }
+  public async getCoursesCount() {
+    const count = await CourseModel.countDocuments()
+
+    return count
+  }
 }
 export default new courseServices()

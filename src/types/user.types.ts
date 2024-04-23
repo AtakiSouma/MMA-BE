@@ -15,3 +15,9 @@ export interface UserUpdatePassword {
   oldPassword: string
   confirmPassword: string
 }
+
+export interface Certificate {
+  public_id: string
+  type?: string
+  url: string
+}

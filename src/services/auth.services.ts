@@ -72,7 +72,11 @@ class authServices {
       name: user.name,
       role: user.role,
       email: user.email,
-      photoUrl: user.photoUrl
+      photoUrl: user.photoUrl,
+      isVerified: user.isVerified,
+      isCertified: user.isCertified,
+      hasPaid: user.hasPaid,
+      
     }
     let link = ''
     const { accessToken, refreshToken } = jwtServices.generatePairToken(tokenGenerated)
@@ -116,9 +120,13 @@ class authServices {
       email: user.email,
       name: user.name,
       photoUrl: user.photoUrl || 'https://i.pinimg.com/originals/67/41/93/6741938a381b6ba51fd7d4ed10c1bbf1.jpg',
+      isVerified: user.isVerified,
+      hasPaid: user.hasPaid,
+      isCertified: user.isCertified,
       avatar:
         user.avatar.url ||
-        'https://64.media.tumblr.com/c8c06b57c16fc199ce6c791621e1d43d/8369c5657db09dce-8c/s1280x1920/d3b0217fb96b061f652724267adb94c55f42a46a.png'
+        'https://64.media.tumblr.com/c8c06b57c16fc199ce6c791621e1d43d/8369c5657db09dce-8c/s1280x1920/d3b0217fb96b061f652724267adb94c55f42a46a.png',
+      
     }
     const { accessToken, refreshToken } = jwtServices.generatePairToken(tokenGenerated)
     let link = ''
@@ -206,10 +214,16 @@ class authServices {
         email: user.email,
         name: user.name,
         photoUrl: user.photoUrl || 'https://i.pinimg.com/originals/67/41/93/6741938a381b6ba51fd7d4ed10c1bbf1.jpg',
+        isVerified: user.isVerified,
+        hasPaid: user.hasPaid,
+        isCertified: user.isCertified,
         avatar:
           user.avatar.url ||
-          'https://64.media.tumblr.com/c8c06b57c16fc199ce6c791621e1d43d/8369c5657db09dce-8c/s1280x1920/d3b0217fb96b061f652724267adb94c55f42a46a.png'
+          'https://64.media.tumblr.com/c8c06b57c16fc199ce6c791621e1d43d/8369c5657db09dce-8c/s1280x1920/d3b0217fb96b061f652724267adb94c55f42a46a.png',
+        
       }
+      // console.log("token:", tokenGenerated)
+      // console.log("user:", user)
       let link = ''
       if (String(user.role) === '66153c6d09d7c5006797e0a3') {
         link = '/dashboard'
@@ -240,9 +254,12 @@ class authServices {
         email: newUser.email,
         name: newUser.name,
         photoUrl: newUser.photoUrl || 'https://i.pinimg.com/originals/67/41/93/6741938a381b6ba51fd7d4ed10c1bbf1.jpg',
+        isVerified: newUser.isVerified,
+        hasPaid: newUser.hasPaid,
+        isCertified: newUser.isCertified,
         avatar:
           newUser.avatar.url ||
-          'https://64.media.tumblr.com/c8c06b57c16fc199ce6c791621e1d43d/8369c5657db09dce-8c/s1280x1920/d3b0217fb96b061f652724267adb94c55f42a46a.png'
+          'https://64.media.tumblr.com/c8c06b57c16fc199ce6c791621e1d43d/8369c5657db09dce-8c/s1280x1920/d3b0217fb96b061f652724267adb94c55f42a46a.png',
       }
       let link = ''
       if (String(newUser.role) === '66153c6d09d7c5006797e0a3') {
