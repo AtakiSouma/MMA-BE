@@ -126,7 +126,6 @@ class authServices {
       avatar:
         user.avatar.url ||
         'https://64.media.tumblr.com/c8c06b57c16fc199ce6c791621e1d43d/8369c5657db09dce-8c/s1280x1920/d3b0217fb96b061f652724267adb94c55f42a46a.png',
-      
     }
     const { accessToken, refreshToken } = jwtServices.generatePairToken(tokenGenerated)
     let link = ''

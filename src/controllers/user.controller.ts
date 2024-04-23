@@ -112,7 +112,8 @@ const userController = {
   rejectInstructor: CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params
-      const updatedUser = await userServices.rejectInstructor(id, next)
+      const { reasons } = req.body
+      const updatedUser = await userServices.rejectInstructor(id, reasons, next)
       return sendSuccessResponse(res, HttpStatusCodes.CREATED, updatedUser)
     } catch (error) {
       return next(new ErrorHandler('Internal Server Error', HttpStatusCodes.INTERNAL_SERVER_ERROR))

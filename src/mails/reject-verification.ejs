@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accept Mail</title>
+    <style>
+      .hello {
+        font-size: 30px;
+      }
+      .container {
+        border-width: 1px;
+        border-radius: 10px;
+        width: 500px;
+        height: 300px;
+      }
+      .container > div {
+        margin-bottom: 10px;
+      }
+      .container img {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hello">Hello Mr./Ms. <%= user.instructorName %></div>
+    <div class="container">
+      <div>
+        Unfortunately, your application is not up to par with our guidelines. Therefore, we had decided to reject your
+        application
+      </div>
+      <div>Reason: <%= user.reasons %></div>
+      <div>
+        If you still want to apply to our platform. You can still log into your account and update your certificates
+      </div>
+      <div>Thank you for your time and your understanding</div>
+      <div></div>
+      <div>________________________________________________________</div>
+      <div></div>
+    </div>
+    <div>From support instructor : <%= user.email %></div>
+  </body>
+</html>
